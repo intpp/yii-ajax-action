@@ -37,7 +37,7 @@ class AjaxAction extends \CAction
         if (!$methodReflection->isPublic()) {
             $this->throwError(\Yii::t('ajaxAction', 'The method does not exist.'));
         } else {
-            call_user_func([$this, $method]);
+            $methodReflection->invoke($this);
         }
 
         $this->sendResponse();
