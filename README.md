@@ -1,2 +1,4 @@
-yii-ajax-action
+Yii Ajax Action
 ===============
+
+# coming soon...

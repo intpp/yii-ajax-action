@@ -1,0 +1,5 @@
+.idea
+vendor
+atlassian-ide-plugin.xml
+composer.phar
+composer.lock

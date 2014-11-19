@@ -1,0 +1,8 @@
+{
+  "name": "intpp/yii-ajax-action",
+  "description": "Yii action for ajax methods",
+  "require": {
+    "php": ">=5.3.0",
+    "yiisoft/yii": "dev-master"
+  }
+}
