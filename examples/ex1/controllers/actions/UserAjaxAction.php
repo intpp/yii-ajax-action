@@ -20,15 +20,11 @@ class UserAjaxAction extends \intpp\yii\actions\AjaxAction
 
     /**
      * Return user
+     *
+     * @param int $userId
      */
-    public function getUser()
+    public function getUser($userId)
     {
-        if (!$this->hasParam('userId')) {
-            $this->throwError('Param "userId" is required.');
-        }
-
-        $userId = $this->getParam('userId');
-
         if (($model = User::model()->findByPk($userId)) === null) {
             $this->throwError('User not found.');
         }

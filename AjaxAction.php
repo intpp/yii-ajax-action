@@ -37,10 +37,55 @@ class AjaxAction extends \CAction
         if (!$methodReflection->isPublic()) {
             $this->throwError(\Yii::t('ajaxAction', 'The method does not exist.'));
         } else {
-            $methodReflection->invoke($this);
+            $methodReflection->invokeArgs($this, $this->getMethodParams($methodReflection));
         }
 
         $this->sendResponse();
+    }
+
+    /**
+     * @param \ReflectionMethod $methodReflection
+     *
+     * @return array
+     */
+    private function getMethodParams($methodReflection)
+    {
+        $params = [];
+
+        foreach ($methodReflection->getParameters() as $param) {
+            $name = $param->getName();
+            $defaultValue = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null;
+
+            if (!$this->hasParam($name) && !$param->isOptional() && !$param->isDefaultValueAvailable()) {
+                $this->throwError(\Yii::t('yii', 'Missing required parameter "{param}".', [
+                    '{param}' => $name,
+                ]));
+            } elseif ($this->hasParam($name)) {
+                $value = $this->getParam($name);
+
+                if ($param->isArray() && !is_array($value)) {
+                    $this->throwError(\Yii::t('yii', 'Parameter "{param}" must be an array.', [
+                        '{param}' => $name,
+                    ]));
+                } elseif (!$param->isArray() && is_array($value)) {
+                    $this->throwError(\Yii::t('yii', 'Parameter "{param}" must be a string.', [
+                        '{param}' => $name,
+                    ]));
+                }
+
+                $params[] = $value;
+            } else {
+                if ($param->isArray() && !is_array($defaultValue)) {
+                    $this->throwError(\Yii::t('yii', 'Parameter "{param}" must be an array.', [
+                        '{param}' => $name,
+                    ]));
+                }
+
+                $params[] = $defaultValue;
+            }
+        }
+
+        return $params;
     }
 
     /**
