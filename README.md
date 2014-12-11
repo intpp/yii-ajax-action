@@ -56,7 +56,7 @@ class SiteAjaxAction extends AjaxAction
         $.ajax({
             url: ajaxUrl,
             data: {
-                method: '', // <---- Name of a function in your AjaxAction class
+                method: 'getFormattedInfo', // <---- Name of a function in your AjaxAction class
                 name: 'Vasya', age: 12, hobbies: ['sport', 'dev', 'sex'] // <---- Parameters for the function
             },
             dataType: 'JSON',
