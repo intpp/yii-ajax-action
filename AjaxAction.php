@@ -134,7 +134,7 @@ class AjaxAction extends \CAction
      */
     public function setOutput($key, $value)
     {
-        Response::add($key, $value);
+        Response::add($value, $key);
     }
 
     /**
