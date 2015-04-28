@@ -33,7 +33,7 @@ abstract class Response
 
     public function send($data = [])
     {
-        if (is_scalar($data)) {
+        if (!is_array($data)) {
             $data = [$data];
         }
         $data = array_merge(self::$data, $data);
