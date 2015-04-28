@@ -145,6 +145,7 @@ class AjaxAction extends \CAction
         }
 
         if ($format == self::FORMAT_JSON) {
+            header('Content-type: application/json');
             $data = \CJSON::encode($data);
         }
 
