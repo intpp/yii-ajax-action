@@ -11,7 +11,7 @@ abstract class Response
     const FORMAT_JSON = 'json';
     const FORMAT_TEXT = 'text';
 
-    protected static $data = [];
+    protected static $data = ['code' => 0];
 
     /**
      * @param string $type
