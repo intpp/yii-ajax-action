@@ -10,7 +10,10 @@ namespace intpp\yii\actions;
 class AjaxAction extends \CAction
 {
     private $request = [];
-    private $response = ['result' => false];
+    /**
+     * @var Response
+     */
+    private $response;
 
     const FORMAT_JSON = 'json';
     const FORMAT_TEXT = 'text';
@@ -131,7 +134,15 @@ class AjaxAction extends \CAction
      */
     public function setOutput($key, $value)
     {
-        $this->response[$key] = $value;
+        Response::add($key, $value);
+    }
+
+    /**
+     * @param Response $response
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
     }
 
     /**
@@ -140,17 +151,7 @@ class AjaxAction extends \CAction
      */
     protected function sendResponse($data = null, $format = self::FORMAT_JSON)
     {
-        if ($data === null) {
-            $data = $this->response;
-        }
-
-        if ($format == self::FORMAT_JSON) {
-            header('Content-type: application/json');
-            $data = \CJSON::encode($data);
-        }
-
-        echo $data;
-        \Yii::app()->end();
+        Response::make($format)->send($data);
     }
 
     /**
@@ -158,8 +159,8 @@ class AjaxAction extends \CAction
      * @param int $code
      * @param string $format
      */
-    protected function throwError($message, $code = 0, $format = self::FORMAT_JSON)
+    protected function throwError($message, $code = 1, $format = self::FORMAT_JSON)
     {
-        $this->sendResponse(['code' => $code, 'result' => false, 'message' => $message], $format);
+        Response::make($format)->throwError($message, $code);
     }
 }

@@ -10,7 +10,7 @@ class UserController extends CController
     public function actions()
     {
         return [
-            'ajax' => '{aliasToAction}.UserAjaxAction'
+            'ajax' => '{aliasToAction}.UserAjaxAction',
         ];
     }
 }
