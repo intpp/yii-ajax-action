@@ -13,6 +13,6 @@ class JsonResponse extends Response
     {
         header('Content-type: application/json');
 
-        return \CJSON::encode(array_merge(['code' => 0], $data));
+        return \CJSON::encode($data);
     }
 }
