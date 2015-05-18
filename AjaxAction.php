@@ -146,10 +146,10 @@ class AjaxAction extends \CAction
     }
 
     /**
-     * @param null $data
+     * @param array $data
      * @param string $format
      */
-    protected function sendResponse($data = null, $format = self::FORMAT_JSON)
+    protected function sendResponse($data = [], $format = self::FORMAT_JSON)
     {
         Response::make($format)->send($data);
     }
