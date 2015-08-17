@@ -9,14 +9,23 @@ namespace intpp\yii\actions;
  */
 class AjaxAction extends \CAction
 {
+    const FORMAT_JSON = 'json';
+    const FORMAT_TEXT = 'text';
+    /**
+     * Default format for response
+     *
+     * @var string
+     */
+    public $defaultFormat = self::FORMAT_JSON;
+
+    /**
+     * @var array
+     */
     private $request = [];
     /**
      * @var Response
      */
     private $response;
-
-    const FORMAT_JSON = 'json';
-    const FORMAT_TEXT = 'text';
 
     public function run()
     {
@@ -40,7 +49,11 @@ class AjaxAction extends \CAction
         if (!$methodReflection->isPublic()) {
             $this->throwError(\Yii::t('ajaxAction', 'The method does not exist.'));
         } else {
-            $methodReflection->invokeArgs($this, $this->getMethodParams($methodReflection));
+            try {
+                $methodReflection->invokeArgs($this, $this->getMethodParams($methodReflection));
+            } catch (AjaxException $e) {
+                $this->throwError($e->getMessage(), $e->getCode());
+            }
         }
 
         $this->sendResponse();
@@ -149,8 +162,12 @@ class AjaxAction extends \CAction
      * @param array $data
      * @param string $format
      */
-    protected function sendResponse($data = [], $format = self::FORMAT_JSON)
+    protected function sendResponse($data = [], $format = null)
     {
+        if ($format === null) {
+            $format = $this->defaultFormat;
+        }
+
         Response::make($format)->send($data);
     }
 
@@ -159,8 +176,12 @@ class AjaxAction extends \CAction
      * @param int $code
      * @param string $format
      */
-    protected function throwError($message, $code = 1, $format = self::FORMAT_JSON)
+    protected function throwError($message, $code = 1, $format = null)
     {
+        if ($format === null) {
+            $format = $this->defaultFormat;
+        }
+
         Response::make($format)->throwError($message, $code);
     }
 }
